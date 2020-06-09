@@ -1,7 +1,7 @@
 //Autor: Lucas Frank Hollmann
 
-#include <stdio.h> //Biblioteca para usar printf.
-#include <stdlib.h> //Biblioteca para usar malloc.
+#include <stdio.h> //Library to use the printf function.
+#include <stdlib.h> //Library to use the malloc function.
 
 struct tnode //Node structure, representing the elements of a tree.
 {
@@ -19,6 +19,56 @@ class BinaryTree
 		
 		tnode *root; //The starting node of the tree.
 		int size; //The tree's size.
+		
+		
+		
+		/* Recursively finds the depth of the tree. 
+		 * This function is private because it will only be called by 
+		 * another member function, which is public.
+		 * 
+		 * curdepth - ponter to the variable that stores the current 
+		 * 			  depth of the tree on the current path.
+		 * depth - pointer to the variable that stores the depth of the tree.
+		 * cur - current node, used to go through the tree.
+		 */
+		void getDepthR(int *curdepth, int *depth, tnode *cur)
+		{
+			if(root == NULL)
+			{			/*If the root is NULL, ends the function 
+						with depth = 0.*/
+						
+				depth = 0;
+				return;
+			}
+			if(cur == NULL) 
+			{		/*If the current node is NULL, ends the function.
+					Meaning it reached the higher depth for this path.*/
+					
+				curdepth = 0; //Resets the current path's depth.
+				return;
+			}
+			if(cur == root)
+			{		/*If the current node is the root (this boolean 
+					expression compares the adress of both nodes), 
+					initializes the value of depth.*/
+				
+				curdepth = 0;
+				depth = 0;
+			}
+			
+			curdepth++; /*Increases the current depth as it just
+						counted a valid node.*/
+						
+			if(curdepth > depth) 
+			{					/*If the current depth is bigger than
+								the tree's depth, updates tree's depth.*/
+				depth = curdepth;
+			}
+			
+			//Recursively calls itself for both sides of the current node.
+			getDepthR(curdepth,depth,cur->left);
+			getDepthR(curdepth,depth,cur->right);
+		}
 		
 	public:
 	
@@ -41,7 +91,29 @@ class BinaryTree
 			{	
 				printf("Current tree's size is: %d\n", size);
 			}
-			return size; //Can be used as an is(not)Empty function, as 0 has the boolean value of false.
+			return size; //Can be used as an is(not)Empty function, 
+						 //as 0 has the boolean value of false.
+		}
+		
+		/* Sets and calls the function that finds the depth of the tree.
+		 *
+		 * print - boolean flag to print the depth.
+		 * return - the depth of the tree.
+		 */
+		int getDepth(bool print)
+		{
+			int curdepth, depth; /*Declaration for the variables for the
+								   getDepthR function.*/
+
+			getDepthR(&curdepth, &depth, root);/*Calls the function that 
+											   finds the depth*/
+											   
+			if(print)//If print is true, show the depth on the screen.
+			{
+				printf("Tree's depth: %d\n", depth);
+			}
+			
+			return depth;
 		}
 		
 		/*	Prints the content of the tree.
@@ -67,33 +139,44 @@ class BinaryTree
 			{
 				root = newnode;
 				size++; //Increases the tree's size.
-				//Could just return here so the following "else" wouldn't be needed. But, this way, it seems to be more organized and readable.
+				/*Could just return here so the following "else" wouldn't 
+				be needed. But, this way, it seems to be more organized and readable.*/
 			}
 			else
 			{
 				tnode temp =  root;//Temporary node to go through the tree.
 				
-				while(temp!=NULL)//While the current node isn't null, keep going ahead on the tree.
+				while(temp!=NULL)/*While the current node isn't null, 
+								   keep going ahead on the tree.*/
 				{
-					if(v < temp->value)//If the value to be added is lower than the current, go to the left.
+					if(v < temp->value)/*If the value to be added is lower 
+										 than the current, go to the left.*/
 					{
 						temp = temp->left;
 					}
-					else if(v > temp->value)//If the value to be added is bigger than the current, go to the right.
+					else if(v > temp->value)/*If the value to be added is 
+											  bigger than the current, go 
+										      to the right.*/
 					{
 						temp = temp->right;
 					}
-					else//If the value to be added is equal to the current one, prints this information and ends the function.
-					{
+					else
+					{ /*If the value to be added is equal to the 
+						  current one, prints this information 
+						  and ends the function.*/
+					
+					
 						printf("This value is already in the tree.\n");
 						return;
 					}
-				} //When temp reaches a NULL node, meaning it found a valid slot to add the new node, the while loop ends.
+				} /*When temp reaches a NULL node, meaning it found a 
+				valid slot to add the new node, the while loop ends.*/
 				
 				temp = newnode; //Adds the new node to the position found.
 				size++; //Increases the size of the tree.
 			}
 		}
+
 };
 
 
