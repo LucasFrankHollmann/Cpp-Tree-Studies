@@ -37,37 +37,49 @@ class BinaryTree
 			{			/*If the root is NULL, ends the function 
 						with depth = 0.*/
 						
-				depth = 0;
+				*depth = 0;
 				return;
 			}
 			if(cur == NULL) 
 			{		/*If the current node is NULL, ends the function.
 					Meaning it reached the higher depth for this path.*/
-					
-				curdepth = 0; //Resets the current path's depth.
+					printf("b");
+				*curdepth = 0; //Resets the current path's depth.
 				return;
 			}
+			
 			if(cur == root)
 			{		/*If the current node is the root (this boolean 
 					expression compares the adress of both nodes), 
 					initializes the value of depth.*/
+				printf("a");
+				*curdepth = 0;
+				*depth = 0;
 				
-				curdepth = 0;
-				depth = 0;
 			}
 			
-			curdepth++; /*Increases the current depth as it just
-						counted a valid node.*/
-						
+			*curdepth = *curdepth+1; /*Increases the current depth as 
+									  it just counted a valid node.*/
+			printf("%d\n", *curdepth);
 			if(curdepth > depth) 
 			{					/*If the current depth is bigger than
 								the tree's depth, updates tree's depth.*/
-				depth = curdepth;
+				*depth = *curdepth;
 			}
 			
 			//Recursively calls itself for both sides of the current node.
+			
+			int temp = *curdepth;/*temp stores current depth before going
+									to the left node, allowing to restore 
+									the value for the current node before
+									going to the right*/
+									
 			getDepthR(curdepth,depth,cur->left);
+			
+			*curdepth = temp;//Restores current node's depth.
+			
 			getDepthR(curdepth,depth,cur->right);
+			
 		}
 		
 	public:
@@ -102,8 +114,8 @@ class BinaryTree
 		 */
 		int getDepth(bool print)
 		{
-			int curdepth, depth; /*Declaration for the variables for the
-								   getDepthR function.*/
+			int curdepth, depth;/*Declaration for the variables for the
+								  getDepthR function.*/
 
 			getDepthR(&curdepth, &depth, root);/*Calls the function that 
 											   finds the depth*/
@@ -144,26 +156,29 @@ class BinaryTree
 			}
 			else
 			{
-				tnode temp =  root;//Temporary node to go through the tree.
+				tnode *temp =  root;//Temporary node to go through the tree.
+				tnode *temp2;//Temporary node to store parent's node.
 				
-				while(temp!=NULL)/*While the current node isn't null, 
-								   keep going ahead on the tree.*/
-				{
-					if(v < temp->value)/*If the value to be added is lower 
+				while(temp!=NULL)
+				{					/*While the current node isn't null, 
+									  keep going ahead on the tree.*/
+									  
+					temp2 = temp;
+					if(v < temp->value)
+					{					/*If the value to be added is lower 
 										 than the current, go to the left.*/
-					{
 						temp = temp->left;
 					}
-					else if(v > temp->value)/*If the value to be added is 
+					else if(v > temp->value)
+					{						/*If the value to be added is 
 											  bigger than the current, go 
 										      to the right.*/
-					{
 						temp = temp->right;
 					}
 					else
 					{ /*If the value to be added is equal to the 
-						  current one, prints this information 
-						  and ends the function.*/
+						current one, prints this information 
+						and ends the function.*/
 					
 					
 						printf("This value is already in the tree.\n");
@@ -172,7 +187,18 @@ class BinaryTree
 				} /*When temp reaches a NULL node, meaning it found a 
 				valid slot to add the new node, the while loop ends.*/
 				
-				temp = newnode; //Adds the new node to the position found.
+				
+				/*Adds the new node to the left or right of the last 
+				  node on the correct path*/
+				if(v < temp2->value)
+				{
+					temp2->left = newnode;
+				}
+				else if(v > temp2->value)
+				{
+					temp2->right = newnode;
+				}
+
 				size++; //Increases the size of the tree.
 			}
 		}
