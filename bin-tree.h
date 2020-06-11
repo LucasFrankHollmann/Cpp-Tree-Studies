@@ -82,6 +82,29 @@ class BinaryTree
 			
 		}
 		
+		/* Recursively prints the whole tree (also it is a BFS function).
+		 * This function is private because it will only be called by 
+		 * another member function, which is public.
+		 * 
+		 * level - pointer to the variable that marks the current level on the tree.
+		 * cur - current node, used to go through the tree.
+		 * dir - direction of the current node in relation to it's parent.
+		 * 		 shall be 'l' for left, 'r' for right and 'f' if the 
+		 * 		 current node is the root.
+		 */
+		void printTreeR(int *level ,tnode *cur, char dir)
+		{
+			/*right this need to be a bfs so i'll do it later*/
+			if(cur == NULL)
+			{
+				return;
+			}
+			
+			int tabNum = getDepth(false); /*Number of tabs needed
+			
+			
+			for(
+		}
 	public:
 	
 		/* Class constructor, sets initial values to the variables root and size;
@@ -128,11 +151,15 @@ class BinaryTree
 			return depth;
 		}
 		
-		/*	Prints the content of the tree.
+		/*	Calls the private member function printTreeR.
 		 */ 
 		void printTree()
 		{
+			int level = 0;/*Variable to keep track of the current level 
+							on the tree in the printTreeR function.
+							(represents current depth)*/
 			
+			printTreeR(&level, root, 'f');//Calls the function to print the tree.
 		}
 		
 		/* Inserts a value on the tree, doesn't add duplicated values.
